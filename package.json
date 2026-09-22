@@ -1,0 +1,37 @@
+{
+  "name": "collective-bot-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 43123",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port 43123",
+    "lint": "eslint",
+    "proxy:bypass-warp": "bash scripts/bypass-warp-proxies.sh",
+    "scrape:profile-links": "node scripts/scrape-profile-links.mjs"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "better-sqlite3": "^13.0.3",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.3.0",
+    "lucide-react": "^1.47.0",
+    "next": "16.3.5",
+    "playwright": "^1.63.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "shadcn": "^4.21.0",
+    "tw-animate-css": "^1.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
