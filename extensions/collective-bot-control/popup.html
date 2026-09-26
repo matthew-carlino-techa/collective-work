@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        margin: 0;
+        font: 13px/1.4 system-ui, sans-serif;
+        background: #0d1117;
+        color: #e6edf3;
+        width: 260px;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 8px;
+        color: #58a6ff;
+      }
+      p {
+        margin: 0 0 10px;
+        color: #8b949e;
+        font-size: 12px;
+      }
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 6px;
+        padding: 8px 10px;
+        background: #1f6feb;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #388bfd;
+      }
+      #status {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #7ee787;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Collective Bot Control</h1>
+    <p>
+      Loaded in this account browser. Use dashboard <strong>Steps → Pick</strong>,
+      or start a pick here.
+    </p>
+    <button id="pick">Pick element on page</button>
+    <div id="status"></div>
+    <script src="popup.js"></script>
+  </body>
+</html>
