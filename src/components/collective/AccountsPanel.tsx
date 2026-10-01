@@ -22,6 +22,7 @@ const emptyForm: AccountInput = {
   proxy_user: "",
   proxy_pass: "",
   search_brief: "full stack developer React Node TypeScript",
+  note: "",
   dm_per_day: 50,
   dm_per_hour: 20,
 };
@@ -253,6 +254,7 @@ export function AccountsPanel() {
       search_brief:
         account.search_brief ||
         "full stack developer React Node TypeScript",
+      note: account.note ?? "",
       dm_per_day: account.dm_per_day ?? 50,
       dm_per_hour: account.dm_per_hour ?? 20,
     });
@@ -278,6 +280,7 @@ export function AccountsPanel() {
       proxy_user: account.proxy_user,
       proxy_pass: account.proxy_pass,
       search_brief: account.search_brief,
+      note: account.note ?? "",
       dm_per_day: account.dm_per_day ?? 50,
       dm_per_hour: account.dm_per_hour ?? 20,
     });
@@ -303,6 +306,25 @@ export function AccountsPanel() {
       setError(err instanceof Error ? err.message : "Save failed");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function saveNote(id: number, note: string) {
+    try {
+      const res = await fetch("/api/collective/accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "patch_note", id, note }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Note save failed");
+      if (data.account) {
+        setAccounts((prev) =>
+          prev.map((a) => (a.id === data.account.id ? data.account : a)),
+        );
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Note save failed");
     }
   }
 
@@ -593,6 +615,7 @@ export function AccountsPanel() {
             onMd={setMdOpen}
             onRun={(id, action) => void runAction(id, action)}
             onDelete={(id) => void removeAccount(id)}
+            onNoteSave={(id, note) => void saveNote(id, note)}
           />
         )}
       </div>
@@ -715,6 +738,7 @@ function BotList({
   onMd,
   onRun,
   onDelete,
+  onNoteSave,
 }: {
   accounts: CollectiveAccount[];
   page: number;
@@ -729,11 +753,25 @@ function BotList({
   onMd: (account: CollectiveAccount) => void;
   onRun: (id: number, action: "open" | "start" | "stop") => void;
   onDelete: (id: number) => void;
+  onNoteSave: (id: number, note: string) => void;
 }) {
   const pageCount = Math.max(1, Math.ceil(accounts.length / pageSize));
   const safePage = Math.min(page, pageCount);
   const start = (safePage - 1) * pageSize;
   const rows = accounts.slice(start, start + pageSize);
+  const [drafts, setDrafts] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    setDrafts((prev) => {
+      const next = { ...prev };
+      for (const account of accounts) {
+        if (next[account.id] === undefined) {
+          next[account.id] = account.note ?? "";
+        }
+      }
+      return next;
+    });
+  }, [accounts]);
 
   return (
     <div className="space-y-3">
@@ -746,6 +784,10 @@ function BotList({
             failed: 0,
           };
           const running = account.start_status === "yes";
+          const noteValue =
+            drafts[account.id] !== undefined
+              ? drafts[account.id]
+              : account.note ?? "";
           return (
             <li
               key={account.id}
@@ -772,6 +814,39 @@ function BotList({
                     sent {account.today_count}/{account.dm_per_day ?? "—"}
                   </span>
                 </div>
+                <label className="mt-1.5 flex items-center gap-2">
+                  <span className="shrink-0 text-[11px] text-[#8aa099]">
+                    Note
+                  </span>
+                  <input
+                    type="text"
+                    data-testid={`bot-note-${account.id}`}
+                    value={noteValue}
+                    maxLength={200}
+                    placeholder="Short note…"
+                    onChange={(e) =>
+                      setDrafts((prev) => ({
+                        ...prev,
+                        [account.id]: e.target.value,
+                      }))
+                    }
+                    onBlur={(e) => {
+                      const next = e.currentTarget.value.trim();
+                      setDrafts((prev) => ({
+                        ...prev,
+                        [account.id]: next,
+                      }));
+                      if (next === (account.note ?? "").trim()) return;
+                      onNoteSave(account.id, next);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    className="h-7 w-full max-w-xs rounded-md border border-[#d5e3de] bg-white px-2 text-xs text-[#1c3330] outline-none placeholder:text-[#a3b5b0] focus-visible:border-[#0f766e]"
+                  />
+                </label>
                 {account.error_message ? (
                   <p className="mt-1 line-clamp-1 text-[11px] text-red-600">
                     {account.error_message}

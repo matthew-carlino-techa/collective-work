@@ -14,6 +14,8 @@ export type CollectiveAccount = {
   proxy_user: string;
   proxy_pass: string;
   search_brief: string;
+  /** Short free-text note shown on the bot card */
+  note: string;
   /** Cap of DMs this account may send per UTC day */
   dm_per_day: number;
   /** Cap of DMs this account may send per rolling hour */
@@ -45,6 +47,7 @@ export type AccountInput = {
   proxy_user?: string;
   proxy_pass?: string;
   search_brief?: string;
+  note?: string;
   dm_per_day?: number;
   dm_per_hour?: number;
 };

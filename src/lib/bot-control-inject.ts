@@ -17,10 +17,11 @@ function readContentScript(): string {
 
 /**
  * Google Chrome no longer honors --load-extension.
- * We inject the same Bot Control script into every page so the bar + picker
- * always exist in each account browser.
+ * We inject the bot control script into every page so the DOM picker
+ * works from the dashboard. The old status bar is no longer shown.
  */
 export async function attachBotControl(context: BrowserContext): Promise<void> {
+  cachedScript = null;
   const source = readContentScript();
   await context.addInitScript({ content: source });
 
@@ -44,13 +45,13 @@ async function injectIntoPage(page: Page, source: string) {
 }
 
 export async function ensureBotControlOnPage(page: Page): Promise<boolean> {
+  cachedScript = null;
   const source = readContentScript();
   try {
     const ok = await page.evaluate((src) => {
-      if (!(window as unknown as { __collectiveBot?: unknown }).__collectiveBot) {
-        // eslint-disable-next-line no-eval
-        eval(src);
-      }
+      document.getElementById("collective-bot-bar")?.remove();
+      // eslint-disable-next-line no-eval
+      eval(src);
       return Boolean(
         (window as unknown as { __collectiveBot?: unknown }).__collectiveBot,
       );

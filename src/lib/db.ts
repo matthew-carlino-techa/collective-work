@@ -313,6 +313,7 @@ function migrate(db: Database.Database) {
     "dm_hour_started_at TEXT NOT NULL DEFAULT ''",
   );
   addAccountCol("dm_quota_day", "dm_quota_day TEXT NOT NULL DEFAULT ''");
+  addAccountCol("note", "note TEXT NOT NULL DEFAULT ''");
 
   // Seed per-account caps from legacy global settings when still at default 0/empty
   const globalDay = (
@@ -549,12 +550,12 @@ export function createAccount(input: AccountInput): CollectiveAccount {
       owner_name, username, email, password,
       github_fs_repo, github_bc_repo, github_pat,
       proxy_ip, proxy_port, proxy_user, proxy_pass,
-      search_brief, dm_per_day, dm_per_hour
+      search_brief, note, dm_per_day, dm_per_hour
     ) VALUES (
       @owner_name, @username, @email, @password,
       @github_fs_repo, @github_bc_repo, @github_pat,
       @proxy_ip, @proxy_port, @proxy_user, @proxy_pass,
-      @search_brief, @dm_per_day, @dm_per_hour
+      @search_brief, @note, @dm_per_day, @dm_per_hour
     )
   `,
     )
@@ -571,6 +572,7 @@ export function createAccount(input: AccountInput): CollectiveAccount {
       proxy_user: input.proxy_user?.trim() ?? "",
       proxy_pass: input.proxy_pass?.trim() ?? "",
       search_brief: defaultBrief,
+      note: (input.note ?? "").trim().slice(0, 200),
       dm_per_day,
       dm_per_hour,
     });
@@ -613,6 +615,7 @@ export function updateAccount(
       proxy_user = @proxy_user,
       proxy_pass = @proxy_pass,
       search_brief = @search_brief,
+      note = @note,
       dm_per_day = @dm_per_day,
       dm_per_hour = @dm_per_hour,
       updated_at = datetime('now')
@@ -636,9 +639,28 @@ export function updateAccount(
         input.search_brief?.trim() ||
         existing.search_brief ||
         getSearchBrief(),
+      note:
+        input.note !== undefined
+          ? input.note.trim().slice(0, 200)
+          : existing.note || "",
       dm_per_day,
       dm_per_hour,
     });
+  return getAccount(id);
+}
+
+/** Save a short note on a bot card without touching other account fields. */
+export function updateAccountNote(
+  id: number,
+  note: string,
+): CollectiveAccount | undefined {
+  const existing = getAccount(id);
+  if (!existing) return undefined;
+  getDb()
+    .prepare(
+      `UPDATE accounts SET note = ?, updated_at = datetime('now') WHERE id = ?`,
+    )
+    .run(note.trim().slice(0, 200), id);
   return getAccount(id);
 }
 

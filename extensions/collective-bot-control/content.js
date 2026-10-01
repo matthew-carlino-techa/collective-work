@@ -1,4 +1,6 @@
 (() => {
+  // Always strip the old status bar, even if this script already booted
+  document.getElementById("collective-bot-bar")?.remove();
   if (window.__collectiveBot) return;
 
   const w = window;
@@ -197,39 +199,21 @@
     stopPickFn = cleanup;
   }
 
-  function ensureBar() {
-    if (document.getElementById("collective-bot-bar")) return;
-    const bar = document.createElement("div");
-    bar.id = "collective-bot-bar";
-    bar.innerHTML =
-      "<strong>Collective Bot Control</strong> · active in this account browser · use dashboard Steps → Pick";
-    Object.assign(bar.style, {
-      position: "fixed",
-      top: "0",
-      left: "0",
-      right: "0",
-      zIndex: "2147483640",
-      background: "linear-gradient(90deg,#1f6feb,#238636)",
-      color: "#fff",
-      padding: "8px 14px",
-      font: "13px/1.35 system-ui,sans-serif",
-      boxShadow: "0 2px 10px rgba(0,0,0,.35)",
-      pointerEvents: "none",
-    });
-    document.documentElement.appendChild(bar);
+  function removeStatusBar() {
+    document.getElementById("collective-bot-bar")?.remove();
   }
 
   w.__collectiveBot = {
-    version: "1.0.1",
+    version: "1.0.2",
     startPick,
     stopPick: () => stopPickFn?.(),
   };
 
-  const boot = () => ensureBar();
+  const boot = () => removeStatusBar();
   if (document.documentElement) boot();
   else document.addEventListener("DOMContentLoaded", boot);
-  // Re-assert after SPA navigations
-  setInterval(ensureBar, 2000);
+  // Strip the old status bar if a previous inject left it on the page
+  setInterval(removeStatusBar, 2000);
 
   try {
     if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
@@ -240,7 +224,7 @@
           return true;
         }
         if (msg?.type === "status") {
-          sendResponse({ ok: true, version: "1.0.1" });
+          sendResponse({ ok: true, version: "1.0.2" });
           return true;
         }
         return false;

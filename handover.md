@@ -36,7 +36,7 @@ data/dom-analysis/latest.md
 1. Select **Collective** → opens **Pipeline** first  
 2. **Brain** — confirm First msg or Import .md  
 3. **DOM** — Import Claude analysis  
-4. **Accounts** — per-account Sherlock brief + limits → Open all → Start all. Bot list pages at 10 / 15 / 20 (default 10). Bulk Open/Start/Stop still covers every account.  
+4. **Accounts** — per-account Sherlock brief + limits → Open all → Start all. Bot list pages at 10 / 15 / 20 (default 10). Each bot card has a Note field (saved on blur/Enter, up to 200 chars). Bulk Open/Start/Stop still covers every account.  
 5. **Pipeline** — filter by site / name; Following + Double-check; LinkedIn click copies the full URL; Site column is the Collective profile URL (`https://www.collective.work/profile/{slug}`, slug only in the database). Export for Grok downloads `{display_name, seller_username, linkedin_url, profile_url}`. Import profiles matches `seller_username` and fills the LinkedIn id and profile slug only (status, Following, Double-check stay).  
 
 ## Share dashboard (remote worker)

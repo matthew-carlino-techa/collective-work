@@ -207,10 +207,9 @@ export function BotStepsEditor({ accountId, accountLabel, onClose }: Props) {
           )}
         </h3>
         <p className="mt-1 text-sm text-zinc-400">
-          After <strong>Open</strong>, look for the green/blue bar at the top of
-          the account Chrome window: <strong>Collective Bot Control · active</strong>.
-          Then use <strong>Pick</strong> here. Saving the first account copies
-          steps to all others.
+          After <strong>Open</strong>, use <strong>Pick</strong> here to click
+          an element in that account&apos;s Chrome window. Saving the first
+          account copies steps to all others.
         </p>
       </div>
 

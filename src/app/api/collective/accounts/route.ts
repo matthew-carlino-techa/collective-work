@@ -11,6 +11,7 @@ import {
   patchAccountStatus,
   setAccountAction,
   updateAccount,
+  updateAccountNote,
 } from "@/lib/db";
 import {
   runContactBatch,
@@ -30,7 +31,16 @@ export async function POST(request: Request) {
     const body = (await request.json()) as AccountInput & {
       action?: string;
       id?: number;
+      note?: string;
     };
+
+    if (body.action === "patch_note" && body.id != null) {
+      const account = updateAccountNote(body.id, String(body.note ?? ""));
+      if (!account) {
+        return NextResponse.json({ error: "Account not found" }, { status: 404 });
+      }
+      return NextResponse.json({ account });
+    }
 
     // Bulk: Open / Start / Stop every account
     if (
