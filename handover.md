@@ -11,7 +11,7 @@ Update the brain `.md` → Start sends the new **First msg**.
 ## Architecture
 
 - **Shell** — light ops desk: platform rail, run/stop/contact/success, per-bot MD + Secrets + Run/Stop, candidates, test chat
-  - Hash: `#collective/bots` · `#collective/dom` · `#collective/pipeline` · `#collective/brain`
+  - Hash: `#collective/bots` · `#collective/dom` · `#collective/pipeline` · `#collective/brain` · `#collective/chat`
 - **Collective** — Accounts · DOM · Pipeline · Brain (nested under Collective tab)
 - **Brain** — ASD-STE100 markdown (`brains/collective/brain.md` → `data/brains/collective.md`). Chat reply playbook: `brains/collective/chat-workflow.md` (import in Sample MD)
 - **DOM** — Import Claude analysis `.md` → bot steps (`POST /api/collective/dom-analysis`)
@@ -28,6 +28,8 @@ src/components/collective/*          → Collective-only UI
 src/app/api/collective/*             → Collective APIs
 brains/collective/brain.md
 brains/collective/chat-workflow.md   → First msg + reply branches + Step 2–7 chat copy
+src/lib/chat-workflow.ts             → Test chat reply engine (branch match from MD)
+src/app/api/collective/test-chat     → open / reply for Test chat
 data/brains/collective.md
 data/dom-analysis/latest.md
 ```

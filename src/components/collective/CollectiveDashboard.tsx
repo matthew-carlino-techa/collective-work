@@ -14,6 +14,11 @@ const SECTIONS: Array<{ id: Section; label: string; hint: string }> = [
   { id: "bots", label: "Accounts", hint: "Open · Start · Stop" },
   { id: "dom", label: "DOM", hint: "Claude import · steps" },
   { id: "brain", label: "Brain", hint: "First msg .md" },
+  {
+    id: "chat",
+    label: "Test chat",
+    hint: "Practice replies from chat-workflow.md · not sent to Collective",
+  },
 ];
 
 function normalizeSection(raw: string): Section {
