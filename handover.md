@@ -13,7 +13,7 @@ Update the brain `.md` → Start sends the new **First msg**.
 - **Shell** — light ops desk: platform rail, run/stop/contact/success, per-bot MD + Secrets + Run/Stop, candidates, test chat
   - Hash: `#collective/bots` · `#collective/dom` · `#collective/pipeline` · `#collective/brain`
 - **Collective** — Accounts · DOM · Pipeline · Brain (nested under Collective tab)
-- **Brain** — ASD-STE100 markdown (`brains/collective/brain.md` → `data/brains/collective.md`)
+- **Brain** — ASD-STE100 markdown (`brains/collective/brain.md` → `data/brains/collective.md`). Chat reply playbook: `brains/collective/chat-workflow.md` (import in Sample MD)
 - **DOM** — Import Claude analysis `.md` → bot steps (`POST /api/collective/dom-analysis`)
 - **Pipeline** — live `contacting`; unique seller; email + LinkedIn when scraped
 - **Bulk** — Open all / Start all / Stop all
@@ -27,6 +27,7 @@ src/components/DashboardShell.tsx    → top-level platform tabs
 src/components/collective/*          → Collective-only UI
 src/app/api/collective/*             → Collective APIs
 brains/collective/brain.md
+brains/collective/chat-workflow.md   → First msg + reply branches + Step 2–7 chat copy
 data/brains/collective.md
 data/dom-analysis/latest.md
 ```

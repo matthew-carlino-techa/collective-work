@@ -83,6 +83,8 @@ export function BrainPanel() {
             ASD-STE100 structured markdown is the bot’s brain. Import a{" "}
             <code className="text-zinc-300">.md</code> file —{" "}
             <strong>1. First msg</strong> is what Start sends on Collective.
+            For the full reply playbook use{" "}
+            <code className="text-zinc-300">brains/collective/chat-workflow.md</code>.
             Update the MD to change behavior without code changes.
           </p>
         </div>
